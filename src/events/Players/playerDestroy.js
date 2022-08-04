@@ -1,10 +1,12 @@
 const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
 const db = require("../../schema/setup");
+const db2 = require("../../schema/autoReconnect");
 
 module.exports = {
     name: "playerDestroy",
     run: async (client, player) => {
         client.logger.log(`Player Destroy in @ ${player.guild}`, "log");
+        if (player.data.get("autoplay")) try { player.data.delete("autoplay") } catch (err) { client.logger.log(err.stack ? err.stack : err, "log") };
         let guild = client.guilds.cache.get(player.guild);
         if (!guild) return;
         const data = await db.findOne({ Guild: guild.id });
@@ -38,11 +40,11 @@ module.exports = {
             embeds: [embed1],
             components: [row]
         });
-        const vc = player.data.get("247");
+        const vc = await db2.findOne({Guild: player.guild})
         if(vc) await client.manager.createPlayer({
-            guildId: player.guild,
-            voiceId: player.voice,
-            textId: player.text,
+            guildId: vc.Guild,
+            voiceId: vc.VoiceId,
+            textId: vc.TextId,
             deaf: true,
           });
     }

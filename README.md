@@ -39,6 +39,8 @@ ok
 - [x] Vimeo
 - [x] Https (Radio)
 ## 🌟 Feature
+- [x] Setup System
+- [X] Auto reconnect 
 - [x] Music System
 - [x] Playlists System
 - [x] Custom Prefix
